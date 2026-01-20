@@ -63,7 +63,7 @@ export const generateReading = async (
       config: {
         httpOptions: {
           baseUrl:
-            "http://xui.labelchat.dpdns.org:3000/v1beta/models/gemini-3-flash-preview:generateContent",
+            "http://xui.labelchat.dpdns.org:3000",
         },
       },
     });
