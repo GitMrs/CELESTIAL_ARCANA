@@ -63,7 +63,7 @@ export const generateReading = async (
       config: {
         httpOptions: {
           baseUrl:
-            "http://xui.labelchat.dpdns.org:3000",
+            "https://xui.labelchat.dpdns.org",
         },
       },
     });
