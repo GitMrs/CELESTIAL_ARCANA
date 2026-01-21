@@ -32,6 +32,18 @@ export const clearHistory = (): void => {
   }
 };
 
+export const removeFromHistory = (readingId: string): SavedReading[] => {
+  try {
+    const current = loadHistory();
+    const updated = current.filter(item => item.id !== readingId);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    return updated;
+  } catch (error) {
+    console.error('Failed to remove from history:', error);
+    return loadHistory();
+  }
+};
+
 export const loadApiKey = (): string | null => {
   try {
     return localStorage.getItem(API_KEY_STORAGE);

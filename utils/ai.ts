@@ -62,8 +62,7 @@ export const generateReading = async (
       contents: prompt,
       config: {
         httpOptions: {
-          baseUrl:
-            "https://xui.labelchat.dpdns.org",
+          baseUrl: window.location.origin+'/api/',
         },
       },
     });

@@ -9,18 +9,34 @@ interface DailyRitualViewProps {
   lang: Lang;
   onStartDailyShuffle: () => void;
   onHandleFatedReveal: () => void;
+  hasTodayReading: boolean;
+  error: string | null;
 }
 
 export const DailyRitualView = ({
   ritualStage,
   lang,
   onStartDailyShuffle,
-  onHandleFatedReveal
+  onHandleFatedReveal,
+  hasTodayReading,
+  error
 }: DailyRitualViewProps) => {
   const t = TRANSLATIONS[lang];
 
   return (
     <motion.div key="daily-ritual" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-[85vh] flex flex-col items-center justify-center p-6 text-center overflow-hidden relative">
+      {/* 错误信息显示 - 与HomeView保持一致 */}
+      {error && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="h-6 mt-4 text-center"
+        >
+          <p className="text-red-400 text-[10px] animate-pulse uppercase tracking-widest">{error}</p>
+        </motion.div>
+      )}
+      
       <AnimatePresence mode="wait">
         {ritualStage === 'START' ? (
           <motion.div key="d-start" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }} className="flex flex-col items-center">
@@ -46,10 +62,17 @@ export const DailyRitualView = ({
             </div>
             <h2 className="text-4xl text-yellow-100 tracking-[0.5em] mb-4 uppercase font-bold">{t.daily}</h2>
             <p className="text-gray-400 text-xs max-w-xs mb-14 leading-relaxed italic opacity-60 px-4">
-              {lang === 'zh' ? '在星辰的注视下静心。开启今日的命运指引。' : 'Meditate under the stars. Unlock today\'s fated insight.'}
+              {hasTodayReading 
+                ? (lang === 'zh' ? '今日的命运指引已开启。明日再来寻求新的启示。' : 'Today\'s insight has been revealed. Return tomorrow for new guidance.')
+                : (lang === 'zh' ? '在星辰的注视下静心。开启今日的命运指引。' : 'Meditate under the stars. Unlock today\'s fated insight.')
+              }
             </p>
-            <button onClick={onStartDailyShuffle} className="glass group px-16 py-6 rounded-full text-yellow-500 border border-yellow-500/40 uppercase tracking-[0.6em] font-bold active:scale-95 shadow-2xl transition-all hover:bg-yellow-500/5">
-              {t.daily_shuffle}
+            <button 
+              onClick={onStartDailyShuffle} 
+              disabled={hasTodayReading}
+              className={`glass group px-16 py-6 rounded-full text-yellow-500 border ${hasTodayReading ? 'border-gray-500/30 text-gray-400 cursor-not-allowed' : 'border-yellow-500/40 cursor-pointer'} uppercase tracking-[0.6em] font-bold active:scale-95 shadow-2xl transition-all ${hasTodayReading ? '' : 'hover:bg-yellow-500/5'}`}
+            >
+              {hasTodayReading ? (lang === 'zh' ? '已完成' : 'Completed') : t.daily_shuffle}
             </button>
           </motion.div>
         ) : ritualStage === 'SHUFFLE' ? (

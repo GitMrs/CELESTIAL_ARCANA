@@ -50,7 +50,9 @@ const CelestialArcana = () => {
     handleCardClick,
     resetAppState,
     handleSaveApiKey,
-    handleClearApiKey
+    handleClearApiKey,
+    handleDeleteReading,
+    hasTodayDailyReading
   } = useTarot();
 
   const t = TRANSLATIONS[lang];
@@ -104,6 +106,8 @@ const CelestialArcana = () => {
                 lang={lang}
                 onStartDailyShuffle={startDailyShuffle}
                 onHandleFatedReveal={() => handleFatedReveal(t.error_api)}
+                hasTodayReading={hasTodayDailyReading()}
+                error={error}
               />
             )}
             {activeTab === 'ENCYCLOPEDIA' && (
@@ -118,6 +122,7 @@ const CelestialArcana = () => {
                 history={history}
                 lang={lang}
                 onSelectReading={handleSelectReading}
+                onDeleteReading={handleDeleteReading}
               />
             )}
             
@@ -140,13 +145,26 @@ const CelestialArcana = () => {
           </div>
         ) : appState === 'DRAWING' ? (
           <motion.div key="drawing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 pt-28">
-            <div className="text-center mb-14">
-              <h2 className="text-3xl text-yellow-100 tracking-widest font-bold uppercase">{t.choose_fate}</h2>
-              <p className="text-gray-500 text-[10px] mt-4 tracking-[0.3em] italic uppercase">{t.tap_card.replace('{count}', (getRequiredCount(spreadType) - selectedCards.length).toString())}</p>
-              <div className="flex justify-center gap-6 mt-12">
-                {selectedCards.map((c, i) => (
-                  <motion.div initial={{ scale: 0, y: 20 }} animate={{ scale: 1, y: 0 }} key={i} className="w-16 h-24 glass border-2 border-yellow-500/60 rounded-xl flex items-center justify-center text-4xl shadow-[0_0_20px_rgba(234,179,8,0.5)] bg-yellow-500/5">{c.image}</motion.div>
-                ))}
+            <div className="mb-14">
+              {/* 可点击的标题，用于返回 */}
+              <div className="text-center mb-4">
+                <h2 
+                  onClick={resetAppState}
+                  className="text-3xl text-yellow-100 tracking-widest font-bold uppercase cursor-pointer hover:text-yellow-300 transition-colors"
+                  style={{ textShadow: '0 0 10px rgba(234, 179, 8, 0.5)' }}
+                >
+                  {t.choose_fate}
+                </h2>
+              </div>
+              
+              {/* 提示文本和已选卡片 */}
+              <div className="text-center">
+                <p className="text-gray-500 text-[10px] mt-4 tracking-[0.3em] italic uppercase">{t.tap_card.replace('{count}', (getRequiredCount(spreadType) - selectedCards.length).toString())}</p>
+                <div className="flex justify-center gap-6 mt-12">
+                  {selectedCards.map((c, i) => (
+                    <motion.div initial={{ scale: 0, y: 20 }} animate={{ scale: 1, y: 0 }} key={i} className="w-16 h-24 glass border-2 border-yellow-500/60 rounded-xl flex items-center justify-center text-4xl shadow-[0_0_20px_rgba(234,179,8,0.5)] bg-yellow-500/5">{c.image}</motion.div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 max-w-2xl mx-auto overflow-y-auto max-h-[66vh] pb-10 pr-2">

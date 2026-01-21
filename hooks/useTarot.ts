@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Lang, AppState, SpreadType, RitualState, TarotCard, SavedReading } from '../types';
 import { TAROT_CARDS } from '../constants';
 import { generateReading } from '../utils/ai';
-import { loadHistory, saveToHistory, loadApiKey, saveApiKey, clearApiKey } from '../utils/storage';
+import { loadHistory, saveToHistory, loadApiKey, saveApiKey, clearApiKey, removeFromHistory } from '../utils/storage';
 
 export const useTarot = () => {
   const [activeTab, setActiveTab] = useState<'HOME' | 'DAILY' | 'ENCYCLOPEDIA' | 'HISTORY'>('HOME');
@@ -125,6 +125,22 @@ export const useTarot = () => {
     clearApiKey();
   };
 
+  const handleDeleteReading = (readingId: string) => {
+    const updatedHistory = removeFromHistory(readingId);
+    setHistory(updatedHistory);
+  };
+
+  const hasTodayDailyReading = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return history.some(reading => {
+      const readingDate = new Date(reading.timestamp);
+      readingDate.setHours(0, 0, 0, 0);
+      return readingDate.getTime() === today.getTime() && reading.spreadType === 'SINGLE';
+    });
+  };
+
   return {
     activeTab,
     setActiveTab,
@@ -162,6 +178,8 @@ export const useTarot = () => {
     handleCardClick,
     resetAppState,
     handleSaveApiKey,
-    handleClearApiKey
+    handleClearApiKey,
+    handleDeleteReading,
+    hasTodayDailyReading
   };
 };
