@@ -5,7 +5,6 @@ import { generateReading } from '../utils/ai';
 import { loadHistory, saveToHistory, loadApiKey, saveApiKey, clearApiKey, removeFromHistory } from '../utils/storage';
 
 export const useTarot = () => {
-  const [activeTab, setActiveTab] = useState<'HOME' | 'DAILY' | 'ENCYCLOPEDIA' | 'HISTORY'>('HOME');
   const [appState, setAppState] = useState<AppState>('IDLE');
   const [lang, setLang] = useState<Lang>('zh');
   const [question, setQuestion] = useState('');
@@ -130,6 +129,14 @@ export const useTarot = () => {
     setHistory(updatedHistory);
   };
 
+  const handleSelectReading = (item: typeof history[0]) => {
+    setReading(item);
+    setAppState('READING');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
+
   const hasTodayDailyReading = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -142,8 +149,6 @@ export const useTarot = () => {
   };
 
   return {
-    activeTab,
-    setActiveTab,
     appState,
     setAppState,
     lang,
@@ -180,6 +185,7 @@ export const useTarot = () => {
     handleSaveApiKey,
     handleClearApiKey,
     handleDeleteReading,
+    handleSelectReading,
     hasTodayDailyReading
   };
 };
