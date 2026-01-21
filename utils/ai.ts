@@ -62,7 +62,8 @@ export const generateReading = async (
       contents: prompt,
       config: {
         httpOptions: {
-          baseUrl: window.location.origin+'/api/',
+          // baseUrl: window.location.origin+'/api/',
+          baseUrl: "https://arcana.labelchat.dpdns.org/api/", 
         },
       },
     });

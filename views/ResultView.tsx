@@ -1,7 +1,9 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { RotateCcw, RefreshCw, Moon, Sun, Star } from 'lucide-react';
+import { RotateCcw, RefreshCw, Moon, Sun, Star, Camera } from 'lucide-react';
 import { SavedReading, ViewType, Lang } from '../types';
 import { TRANSLATIONS } from '../constants';
+import * as htmlToImage from 'html-to-image';
 
 interface ResultViewProps {
   reading: SavedReading;
@@ -19,6 +21,38 @@ export const ResultView = ({
   onStartDailyShuffle
 }: ResultViewProps) => {
   const t = TRANSLATIONS[lang];
+  const resultContainerRef = React.useRef<HTMLDivElement>(null);
+
+  // 截图功能
+  const handleScreenshot = async () => {
+    if (!resultContainerRef.current) return;
+
+    try {
+      // 临时禁用动画，确保截图清晰
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+
+      // 生成高质量截图
+      const dataUrl = await htmlToImage.toPng(resultContainerRef.current, {
+        pixelRatio: 2, // 提高清晰度
+        backgroundColor: '#050505', // 设置背景色
+        quality: 1.0, // 最高质量
+        cacheBust: true, // 避免缓存问题
+        includeQueryParams: true // 包含查询参数
+      });
+
+      // 恢复原始状态
+      document.body.style.overflow = originalOverflow;
+
+      // 转换为图片并下载
+      const link = document.createElement('a');
+      link.download = `tarot-reading-${new Date().toISOString().slice(0, 10)}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('Screenshot failed:', error);
+    }
+  };
 
   return (
     <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 pb-36 px-6 max-w-2xl mx-auto">
@@ -26,11 +60,17 @@ export const ResultView = ({
         <button onClick={onResetAppState} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
           <RotateCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" /> {t.new_question}
         </button>
-        {activeTab === 'DAILY' && (
-          <button onClick={onStartDailyShuffle} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
-            <RefreshCw className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" /> {t.redraw}
+        <div className="flex items-center gap-4">
+          {/* 截图按钮 */}
+          <button onClick={handleScreenshot} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
+            <Camera className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" /> {t.screenshot || 'Screenshot'}
           </button>
-        )}
+          {activeTab === 'DAILY' && (
+            <button onClick={onStartDailyShuffle} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
+              <RefreshCw className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" /> {t.redraw}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-16">
@@ -92,6 +132,7 @@ export const ResultView = ({
         </div>
 
         <motion.div 
+          ref={resultContainerRef}
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -112,9 +153,16 @@ export const ResultView = ({
           </div>
 
           <div className="prose prose-invert max-w-none">
-            <p className="text-yellow-50/90 leading-[2] text-lg font-light first-letter:text-6xl first-letter:font-serif first-letter:mr-4 first-letter:float-left first-letter:text-yellow-500 first-letter:leading-none whitespace-pre-line text-justify">
-              {reading?.interpretation}
-            </p>
+            {reading?.interpretation && (
+              <div>
+                <p className="text-yellow-50/90 leading-[2] text-lg font-light whitespace-pre-line text-justify">
+                  <span className="inline-block text-6xl font-serif mr-4 float-left text-yellow-500 leading-none align-top">
+                    {reading.interpretation.charAt(0)}
+                  </span>
+                  {reading.interpretation.slice(1)}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mt-20 pt-10 border-t border-white/5 flex items-center justify-between text-[9px] text-gray-500 uppercase tracking-[0.5em] font-bold">
