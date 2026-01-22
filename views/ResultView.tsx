@@ -1,8 +1,9 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { RotateCcw, RefreshCw, Moon, Sun, Star, Camera } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { RotateCcw, RefreshCw, Moon, Sun, Star, Camera, Share2 } from 'lucide-react';
 import { SavedReading, ViewType, Lang } from '../types';
 import { TRANSLATIONS } from '../constants';
+import { SharePoster } from '../components/SharePoster';
 import * as htmlToImage from 'html-to-image';
 
 interface ResultViewProps {
@@ -22,6 +23,7 @@ export const ResultView = ({
 }: ResultViewProps) => {
   const t = TRANSLATIONS[lang];
   const resultContainerRef = React.useRef<HTMLDivElement>(null);
+  const [showPoster, setShowPoster] = useState(false);
 
   // 截图功能
   const handleScreenshot = async () => {
@@ -62,8 +64,13 @@ export const ResultView = ({
         </button>
         <div className="flex items-center gap-4">
           {/* 截图按钮 */}
-          <button onClick={handleScreenshot} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
+          {/* <button onClick={handleScreenshot} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
             <Camera className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" /> {t.screenshot || 'Screenshot'}
+          </button> */}
+          {/* 分享按钮 */}
+          <button onClick={() => setShowPoster(true)} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
+              <Share2 className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{t.share}</span>
           </button>
           {activeTab === 'DAILY' && (
             <button onClick={onStartDailyShuffle} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
@@ -175,6 +182,16 @@ export const ResultView = ({
       <button onClick={onResetAppState} className="w-full mt-16 py-6 glass rounded-[2.5rem] text-yellow-100 font-bold border border-yellow-500/30 uppercase tracking-[0.6em] text-xs shadow-2xl active:scale-95 transition-all hover:bg-yellow-500/5 group">
         <span className="group-hover:tracking-[0.8em] transition-all duration-300">{t.return}</span>
       </button>
+
+      <AnimatePresence mode="wait">
+        {showPoster && reading && (
+          <SharePoster 
+            data={reading} 
+            lang={lang}
+            onClose={() => setShowPoster(false)}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

@@ -18,6 +18,7 @@ export const useTarot = () => {
   const [ritualStage, setRitualStage] = useState<RitualState>('START');
   const [apiKey, setApiKey] = useState<string>('');
   const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
+  const [zodiac, setZodiac] = useState<any>(null);
 
   const shuffledDeck = useRef<TarotCard[]>([...TAROT_CARDS]);
 
@@ -40,7 +41,7 @@ export const useTarot = () => {
     }
   };
 
-  const startDivination = (errorEmpty: string) => {
+  const startDivination = (errorEmpty: string, zodiac?: any) => {
     if (!question.trim()) {
       setError(errorEmpty);
       return;
@@ -52,6 +53,7 @@ export const useTarot = () => {
     setError(null);
     setSelectedCards([]);
     shuffledDeck.current = [...TAROT_CARDS].sort(() => Math.random() - 0.5);
+    setZodiac(zodiac || null);
     setAppState('DRAWING');
   };
 
@@ -64,6 +66,7 @@ export const useTarot = () => {
     setRitualStage('SHUFFLE');
     setQuestion(lang === 'zh' ? "今日运势指引" : "My energy for today");
     setSpreadType('SINGLE');
+    setError(null);
     
     setTimeout(() => {
       const picked = TAROT_CARDS[Math.floor(Math.random() * TAROT_CARDS.length)];
@@ -91,7 +94,7 @@ export const useTarot = () => {
     setAppState('REVEAL');
     setLoading(true);
     try {
-      const newReading = await generateReading(cards, question, spreadType, lang, apiKey);
+      const newReading = await generateReading(cards, question, spreadType, lang, apiKey, zodiac);
       setReading(newReading);
       setHistory(saveToHistory(newReading, history));
       setAppState('READING');
@@ -111,6 +114,7 @@ export const useTarot = () => {
     setReading(null);
     setError(null);
     setRitualStage('START');
+    setZodiac(null);
   };
 
   const handleSaveApiKey = (key: string) => {

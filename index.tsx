@@ -112,6 +112,7 @@ const MainViews = () => {
     spreadType,
     setSpreadType,
     error,
+    setError,
     searchQuery,
     setSearchQuery,
     history,
@@ -130,6 +131,16 @@ const MainViews = () => {
     hasTodayDailyReading,
     getRequiredCount
   } = useTarot();
+  
+  const location = useLocation();
+  
+  // 存储选中的星座
+  const [selectedZodiac, setSelectedZodiac] = React.useState<any>(null);
+  
+  // 监听路由变化，清除错误信息
+  React.useEffect(() => {
+    setError(null);
+  }, [location.pathname, setError]);
 
   const t = TRANSLATIONS[lang];
 
@@ -202,7 +213,7 @@ const MainViews = () => {
             lang={lang}
             onQuestionChange={setQuestion}
             onSpreadTypeChange={setSpreadType}
-            onStartDivination={() => startDivination(t.error_empty)}
+            onStartDivination={(zodiac) => startDivination(t.error_empty, zodiac)}
           />
         } />
         <Route path="/daily" element={

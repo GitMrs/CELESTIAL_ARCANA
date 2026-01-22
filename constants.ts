@@ -1,4 +1,5 @@
-import { TarotCard, Lang } from './types';
+import { TarotCard, Lang, ElementType } from './types';
+import { Flame, Wind, Zap, Waves } from 'lucide-react';
 
 export const TRANSLATIONS = {
   en: {
@@ -20,6 +21,9 @@ export const TRANSLATIONS = {
     oracle_message: "ORACLE'S MESSAGE",
     return: "RETURN TO THE STARS",
     screenshot: "Screenshot",
+    share: "SHARE POSTER",
+    save_hint: "DOWNLOAD IMAGE",
+    generating: "MAPPING STARS...",
     history: "Past Visions",
     encyclopedia: "Arcana Wisdom",
     daily: "Daily Draw",
@@ -50,6 +54,9 @@ export const TRANSLATIONS = {
     redraw: "再次感应",
     oracle_message: "神谕启示",
     screenshot: "截图分享",
+    share: "生成海报",
+    save_hint: "下载图片",
+    generating: "绘制星辰...",
     return: "回归星空",
     history: "占卜历程",
     encyclopedia: "塔罗百科",
@@ -91,5 +98,28 @@ export const TAROT_CARDS: TarotCard[] = [
     { id: 22, name: "Ace of Wands", nameZh: "权杖首牌", image: "🪵", meaning: "New opportunities, inspiration, creative spark.", meaningZh: "新机会，灵感，创意火花。" },
     { id: 23, name: "Ace of Cups", nameZh: "圣杯首牌", image: "🏆", meaning: "New love, emotional awakening, intuition.", meaningZh: "新爱，情感觉醒，直觉。" }
 ];
+
+export const ZODIACS = [
+  { name: 'Aries', zh: '白羊座', icon: '♈', element: 'FIRE' as ElementType, trait: '勇气', traitEn: 'Courage' },
+  { name: 'Taurus', zh: '金牛座', icon: '♉', element: 'EARTH' as ElementType, trait: '稳定', traitEn: 'Stability' },
+  { name: 'Gemini', zh: '双子座', icon: '♊', element: 'AIR' as ElementType, trait: '灵动', traitEn: 'Agility' },
+  { name: 'Cancer', zh: '巨蟹座', icon: '♋', element: 'WATER' as ElementType, trait: '直觉', traitEn: 'Intuition' },
+  { name: 'Leo', zh: '狮子座', icon: '♌', element: 'FIRE' as ElementType, trait: '威严', traitEn: 'Majesty' },
+  { name: 'Virgo', zh: '处女座', icon: '♍', element: 'EARTH' as ElementType, trait: '完美', traitEn: 'Perfection' },
+  { name: 'Libra', zh: '天秤座', icon: '♎', element: 'AIR' as ElementType, trait: '和谐', traitEn: 'Harmony' },
+  { name: 'Scorpio', zh: '天蝎座', icon: '♏', element: 'WATER' as ElementType, trait: '洞察', traitEn: 'Insight' },
+  { name: 'Sagittarius', zh: '射手座', icon: '♐', element: 'FIRE' as ElementType, trait: '自由', traitEn: 'Freedom' },
+  { name: 'Capricorn', zh: '摩羯座', icon: '♑', element: 'EARTH' as ElementType, trait: '坚毅', traitEn: 'Resilience' },
+  { name: 'Aquarius', zh: '水瓶座', icon: '♒', element: 'AIR' as ElementType, trait: '智慧', traitEn: 'Wisdom' },
+  { name: 'Pisces', zh: '双鱼座', icon: '♓', element: 'WATER' as ElementType, trait: '共情', traitEn: 'Empathy' }
+];
+
+export const ELEMENT_STYLES = {
+  FIRE: { color: '#f97316', bg: 'rgba(249, 115, 22, 0.1)', border: 'rgba(249, 115, 22, 0.3)', glow: '0 0 20px rgba(249, 115, 22, 0.2)', icon: Flame },
+  EARTH: { color: '#10b981', bg: 'rgba(16, 185, 129, 0.1)', border: 'rgba(16, 185, 129, 0.3)', glow: '0 0 20px rgba(16, 185, 129, 0.2)', icon: Wind },
+  AIR: { color: '#22d3ee', bg: 'rgba(34, 211, 238, 0.1)', border: 'rgba(34, 211, 238, 0.3)', glow: '0 0 20px rgba(34, 211, 238, 0.2)', icon: Zap },
+  WATER: { color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)', border: 'rgba(59, 130, 246, 0.3)', glow: '0 0 20px rgba(59, 130, 246, 0.2)', icon: Waves },
+};
+
 
 export const getTranslation = (lang: Lang) => TRANSLATIONS[lang];

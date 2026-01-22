@@ -32,6 +32,7 @@ export const generateReading = async (
   spreadType: SpreadType,
   lang: Lang,
   apiKey: string,
+  zodiac?: any,
 ): Promise<SavedReading> => {
   try {
     const ai = getAIInstance(apiKey);
@@ -52,15 +53,31 @@ export const generateReading = async (
           : `Interpret as You, Them, The Bond.`;
     }
 
+    const zodiacContext = zodiac ? (lang === "zh" ? `占卜者的星座是${zodiac.zh || zodiac.name}（${zodiac.element}元素），解读时请结合该星象能量。` : `User's zodiac is ${zodiac.name} (${zodiac.element} element), combine this astrological energy in reading.`) : '';
+
+    const systemInstruction = lang === "zh"
+      ? `你是一位名叫"星辰神谕"的资深塔罗占卜师。你的语气神圣、诗意且充满灵性洞察。`
+      : `You are the "Oracle of Stars". Your tone is divine, poetic, and full of spiritual insight.`;
+
     const prompt =
       lang === "zh"
-        ? `你是一位名叫"星辰神谕"的资深塔罗占卜师。问题："${question}"。牌阵：${TRANSLATIONS.zh.spreads[spreadType]}。牌面：${cardNames}。${contextPrompt}提供300字深度诗意解读。回复中文。`
-        : `You are the "Oracle of Stars". Question: "${question}". Spread: ${TRANSLATIONS.en.spreads[spreadType]}. Cards: ${cardNames}. ${contextPrompt}Provide 250-word celestial interpretation. Reply in English.`;
+        ? `${zodiacContext} 用户问题："${question}"。牌阵：${TRANSLATIONS.zh.spreads[spreadType]}。牌面：${cardNames}。${contextPrompt}。
+           请提供两部分内容：
+           1. 约300字的深度诗意解读。
+           2. 一个不超过20个字的"神谕金句"，作为占卜的核心启示。
+           请以JSON格式返回：{"interpretation": "...", "summary": "..."}`
+        : `${zodiacContext} Question: "${question}". Spread: ${TRANSLATIONS.en.spreads[spreadType]}. Cards: ${cardNames}. ${contextPrompt}.
+           Provide two parts:
+           1. A 250-word poetic interpretation.
+           2. A "Golden Sentence" (max 15 words) as the core insight.
+           Return in JSON format: {"interpretation": "...", "summary": "..."}`;
 
     const result = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
       config: {
+        systemInstruction,
+        responseMimeType: "application/json",
         httpOptions: {
           // baseUrl: window.location.origin+'/api/',
           baseUrl: "https://arcana.labelchat.dpdns.org/api/", 
@@ -68,14 +85,20 @@ export const generateReading = async (
       },
     });
 
+    const parsed = JSON.parse(result.text || "{}");
+
     return {
       id: Date.now().toString(),
       timestamp: Date.now(),
       question,
       spreadType,
       cards,
-      interpretation: result.text || "Clouded...",
+      interpretation: parsed.interpretation || "Clouded...",
+      summary: parsed.summary || (lang === "zh" ? "命运等待你的脚步。" : "Destiny awaits your steps."),
       lang,
+      zodiac: zodiac?.zh || undefined,
+      element: zodiac?.element || undefined,
+      chatHistory: [],
     };
   } catch (error) {
     console.error("Failed to generate reading:", error);
