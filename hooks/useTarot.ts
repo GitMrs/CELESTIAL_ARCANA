@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Lang, AppState, SpreadType, RitualState, TarotCard, SavedReading } from '../types';
 import { TAROT_CARDS } from '../constants';
 import { generateReading } from '../utils/ai';
-import { loadHistory, saveToHistory, loadApiKey, saveApiKey, clearApiKey, removeFromHistory } from '../utils/storage';
+import { loadHistory, saveToHistory, loadApiKey, saveApiKey, clearApiKey, removeFromHistory, loadLang, saveLang } from '../utils/storage';
 
 export const useTarot = () => {
   const [appState, setAppState] = useState<AppState>('IDLE');
@@ -28,9 +28,19 @@ export const useTarot = () => {
     if (savedApiKey) {
       setApiKey(savedApiKey);
     }
+    const savedLang = loadLang();
+    if (savedLang && (savedLang === 'en' || savedLang === 'zh')) {
+      setLang(savedLang as Lang);
+    }
   }, []);
 
-  const toggleLang = () => setLang(prev => prev === 'en' ? 'zh' : 'en');
+  const toggleLang = () => {
+    setLang(prev => {
+      const newLang = prev === 'en' ? 'zh' : 'en';
+      saveLang(newLang);
+      return newLang;
+    });
+  };
 
   const getRequiredCount = (type: SpreadType) => {
     switch (type) {

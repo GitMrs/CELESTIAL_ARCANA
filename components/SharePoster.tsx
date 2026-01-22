@@ -66,9 +66,9 @@ export const SharePoster = ({ data, lang, onClose }: SharePosterProps) => {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] bg-black/95 flex flex-col items-center justify-center p-6 backdrop-blur-2xl"
+      className="fixed inset-0 z-[200] bg-black/95 flex flex-col items-center p-6 backdrop-blur-2xl overflow-y-auto md:justify-center"
     >
-      <div className="relative w-full max-w-[380px] flex flex-col items-center">
+      <div className="relative w-full max-w-[380px]  pt-10 flex flex-col items-center">
         <motion.button 
           whileTap={{ scale: 0.9 }}
           onClick={onClose}

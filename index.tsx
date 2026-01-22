@@ -17,17 +17,17 @@ import { CardBack, ApiKeyDialog } from './components';
 import { HomeView, DailyRitualView, ResultView, EncyclopediaView, HistoryView } from './views';
 import { TRANSLATIONS } from './constants';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  const {
-    lang,
-    toggleLang,
-    apiKey,
-    setApiKey,
-    showApiKeyDialog,
-    setShowApiKeyDialog,
-    handleSaveApiKey,
-    handleClearApiKey
-  } = useTarot();
+const Layout = ({ children, lang, toggleLang, apiKey, setApiKey, showApiKeyDialog, setShowApiKeyDialog, handleSaveApiKey, handleClearApiKey }: { 
+  children: React.ReactNode;
+  lang: any;
+  toggleLang: () => void;
+  apiKey: string;
+  setApiKey: (key: string) => void;
+  showApiKeyDialog: boolean;
+  setShowApiKeyDialog: (show: boolean) => void;
+  handleSaveApiKey: (key: string) => void;
+  handleClearApiKey: () => void;
+}) => {
 
   const t = TRANSLATIONS[lang];
 
@@ -68,8 +68,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const Navigation = () => {
-  const { lang, resetAppState } = useTarot();
+const Navigation = ({ lang, resetAppState }: { lang: any; resetAppState: () => void }) => {
   const location = useLocation();
   const t = TRANSLATIONS[lang];
 
@@ -78,7 +77,7 @@ const Navigation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-24 glass border-t border-white/5 flex items-center justify-around px-6 z-[60] pb-6">
+    <div className="fixed bottom-0 left-0 right-0 h-20 glass border-t border-white/5 flex items-center justify-around px-6 z-[60] pb-1">
       {
         [
           { id: 'HOME', path: '/', icon: Home, label: t.home },
@@ -104,33 +103,57 @@ const Navigation = () => {
   );
 };
 
-const MainViews = () => {
-  const {
-    appState,
-    question,
-    setQuestion,
-    spreadType,
-    setSpreadType,
-    error,
-    setError,
-    searchQuery,
-    setSearchQuery,
-    history,
-    ritualStage,
-    selectedCards,
-    reading,
-    shuffledDeck,
-    lang,
-    startDivination,
-    startDailyShuffle,
-    handleFatedReveal,
-    handleCardClick,
-    resetAppState,
-    handleSelectReading,
-    handleDeleteReading,
-    hasTodayDailyReading,
-    getRequiredCount
-  } = useTarot();
+const MainViews = ({
+  appState,
+  question,
+  setQuestion,
+  spreadType,
+  setSpreadType,
+  error,
+  setError,
+  searchQuery,
+  setSearchQuery,
+  history,
+  ritualStage,
+  selectedCards,
+  reading,
+  shuffledDeck,
+  lang,
+  startDivination,
+  startDailyShuffle,
+  handleFatedReveal,
+  handleCardClick,
+  resetAppState,
+  handleSelectReading,
+  handleDeleteReading,
+  hasTodayDailyReading,
+  getRequiredCount
+}: {
+  appState: any;
+  question: string;
+  setQuestion: (question: string) => void;
+  spreadType: any;
+  setSpreadType: (type: any) => void;
+  error: string | null;
+  setError: (error: string | null) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  history: any[];
+  ritualStage: any;
+  selectedCards: any[];
+  reading: any | null;
+  shuffledDeck: any;
+  lang: any;
+  startDivination: (errorEmpty: string, zodiac?: any) => void;
+  startDailyShuffle: () => void;
+  handleFatedReveal: (errorApi: string) => void;
+  handleCardClick: (card: any, errorApi: string) => void;
+  resetAppState: () => void;
+  handleSelectReading: (item: any) => void;
+  handleDeleteReading: (readingId: string) => void;
+  hasTodayDailyReading: () => boolean;
+  getRequiredCount: (type: any) => number;
+}) => {
   
   const location = useLocation();
   
@@ -242,16 +265,84 @@ const MainViews = () => {
           />
         } />
       </Routes>
-      <Navigation />
+      <Navigation lang={lang} resetAppState={resetAppState} />
     </>
   );
 };
 
 const CelestialArcana = () => {
+  const {
+    appState,
+    question,
+    setQuestion,
+    spreadType,
+    setSpreadType,
+    error,
+    setError,
+    searchQuery,
+    setSearchQuery,
+    history,
+    ritualStage,
+    selectedCards,
+    reading,
+    shuffledDeck,
+    lang,
+    toggleLang,
+    apiKey,
+    setApiKey,
+    showApiKeyDialog,
+    setShowApiKeyDialog,
+    handleSaveApiKey,
+    handleClearApiKey,
+    startDivination,
+    startDailyShuffle,
+    handleFatedReveal,
+    handleCardClick,
+    resetAppState,
+    handleSelectReading,
+    handleDeleteReading,
+    hasTodayDailyReading,
+    getRequiredCount
+  } = useTarot();
+
   return (
     <Router>
-      <Layout>
-        <MainViews />
+      <Layout
+        lang={lang}
+        toggleLang={toggleLang}
+        apiKey={apiKey}
+        setApiKey={setApiKey}
+        showApiKeyDialog={showApiKeyDialog}
+        setShowApiKeyDialog={setShowApiKeyDialog}
+        handleSaveApiKey={handleSaveApiKey}
+        handleClearApiKey={handleClearApiKey}
+      >
+        <MainViews
+          appState={appState}
+          question={question}
+          setQuestion={setQuestion}
+          spreadType={spreadType}
+          setSpreadType={setSpreadType}
+          error={error}
+          setError={setError}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          history={history}
+          ritualStage={ritualStage}
+          selectedCards={selectedCards}
+          reading={reading}
+          shuffledDeck={shuffledDeck}
+          lang={lang}
+          startDivination={startDivination}
+          startDailyShuffle={startDailyShuffle}
+          handleFatedReveal={handleFatedReveal}
+          handleCardClick={handleCardClick}
+          resetAppState={resetAppState}
+          handleSelectReading={handleSelectReading}
+          handleDeleteReading={handleDeleteReading}
+          hasTodayDailyReading={hasTodayDailyReading}
+          getRequiredCount={getRequiredCount}
+        />
       </Layout>
     </Router>
   );

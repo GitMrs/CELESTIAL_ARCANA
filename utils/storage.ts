@@ -3,6 +3,7 @@ import { SavedReading } from '../types';
 const STORAGE_KEY = 'celestial_arc_hist_v5';
 const MAX_HISTORY = 50;
 const API_KEY_STORAGE = 'celestial_arc_api_key';
+const LANG_STORAGE = 'celestial_arc_lang';
 
 export const loadHistory = (): SavedReading[] => {
   try {
@@ -66,5 +67,22 @@ export const clearApiKey = (): void => {
     localStorage.removeItem(API_KEY_STORAGE);
   } catch (error) {
     console.error('Failed to clear API key:', error);
+  }
+};
+
+export const loadLang = (): string | null => {
+  try {
+    return localStorage.getItem(LANG_STORAGE);
+  } catch (error) {
+    console.error('Failed to load language:', error);
+    return null;
+  }
+};
+
+export const saveLang = (lang: string): void => {
+  try {
+    localStorage.setItem(LANG_STORAGE, lang);
+  } catch (error) {
+    console.error('Failed to save language:', error);
   }
 };

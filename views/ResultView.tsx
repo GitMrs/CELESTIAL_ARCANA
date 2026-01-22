@@ -57,7 +57,7 @@ export const ResultView = ({
   };
 
   return (
-    <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 pb-36 px-6 max-w-2xl mx-auto">
+    <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-2 pb-36 px-6 max-w-2xl mx-auto">
       <div className="flex justify-between items-center mb-12">
         <button onClick={onResetAppState} className="flex items-center gap-3 text-yellow-500/60 hover:text-yellow-500 transition-colors text-[10px] uppercase tracking-[0.4em] font-bold group">
           <RotateCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" /> {t.new_question}

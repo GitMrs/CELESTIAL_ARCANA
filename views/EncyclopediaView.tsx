@@ -18,7 +18,7 @@ export const EncyclopediaView = ({
   const filteredCards: TarotCard[] = TAROT_CARDS.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()) || c.nameZh.includes(searchQuery));
 
   return (
-    <motion.div key="ency" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+    <motion.div key="ency" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-2 pb-32 px-2 max-w-2xl mx-auto">
       <h2 className="text-3xl text-yellow-100 tracking-widest mb-10 font-bold uppercase">{t.encyclopedia}</h2>
       <div className="relative mb-12">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />

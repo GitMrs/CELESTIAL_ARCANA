@@ -28,7 +28,7 @@ export const HomeView = ({
   const [selectedZodiac, setSelectedZodiac] = useState<any>(null);
 
   return (
-    <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center pt-24 pb-40 px-6">
+    <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center pt-2 pb-2 px-6">
       <div className="text-center mb-10">
         <motion.div animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }} transition={{ duration: 8, repeat: Infinity }}>
           <Sparkles className="w-14 h-14 text-yellow-500 mb-6 mx-auto opacity-70" />

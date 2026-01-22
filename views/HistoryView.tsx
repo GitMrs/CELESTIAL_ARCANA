@@ -18,7 +18,7 @@ export const HistoryView = ({
   const t = TRANSLATIONS[lang];
 
   return (
-    <motion.div key="hist" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+    <motion.div key="hist" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-2 pb-2 px-6 max-w-2xl mx-auto">
       <h2 className="text-3xl text-yellow-100 tracking-widest mb-10 font-bold uppercase">{t.history}</h2>
       {history.length === 0 ? (
         <div className="text-center py-32 opacity-20 italic text-sm tracking-widest">NO VOICES FROM THE PAST...</div>
