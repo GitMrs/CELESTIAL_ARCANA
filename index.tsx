@@ -171,9 +171,9 @@ const MainViews = ({
     return (
       <AnimatePresence mode="wait">
         {appState === 'DRAWING' && (
-          <motion.div key="drawing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 pt-28">
-            <div className="mb-14">
-              <div className="text-center mb-4">
+          <motion.div key="drawing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 pt-1">
+            <div className="mb-1">
+              <div className="text-center mb-2">
                 <h2 
                   onClick={resetAppState}
                   className="text-3xl text-yellow-100 tracking-widest font-bold uppercase cursor-pointer hover:text-yellow-300 transition-colors"
