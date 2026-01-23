@@ -27,7 +27,7 @@ export const HistoryView = ({
           {history.map((item) => (
             <div key={item.id} className="glass p-8 rounded-[2rem] border border-white/5 hover:border-yellow-500/20 transition-all shadow-xl">
               <div className="flex justify-between items-start mb-6">
-                <div className="flex gap-2">{item.cards.map(c => <span key={c.id} className="text-2xl">{c.image}</span>)}</div>
+                <div className="flex gap-2">{item.cards.map(c => <span key={c.id} className="text-2xl">{ lang === 'zh' ? c.nameZh : c.name}</span>)}</div>
                 <div className="flex items-center gap-4">
                   <span className="text-[9px] text-gray-500 uppercase tracking-[0.2em] font-bold">{new Date(item.timestamp).toLocaleDateString()}</span>
                   <button 
